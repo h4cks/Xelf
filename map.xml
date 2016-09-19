@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="utf-8"?>
+<map proto="1.3.3">
+	<name>Xelf</name>
+	<version>0.1.0</version>
+	<objective>敵拠点の本の破壊。 / Destroy the enemy's books.</objective>
+
+	<authors>
+		<author>EEE</author>
+	</authors>
+
+	<teams>
+		<team max="12" color="blue">Blue Team</team>
+		<team max="12" color="green">Green Team</team>
+	</teams>
+
+	<!-- チームごとの初期装備 -->
+	<kits>
+		<!--  共通装備  -->
+		<kit name="default">
+			<!-- 装備 -->
+			<leggings bind="true">Gold Leggings</leggings>
+			<!-- ホットバー -->
+			<item slot="0" enchantment="DAMAGE ALL:2;DIG_SPEED:2">Diamond Axe</item>
+			<item slot="1">Bow</item>
+			<item slot="2" enchantment="DAMAGE ALL:2">Diamond Pickaxe</item>
+			<item slot="5" amount="64">Cooked Beef</item>
+			<item slot="6" amount="24">Vine</item>
+			<item slot="8" amount="32" damage="2">Log</item>
+			<!-- インベントリ -->
+			<item slot="9" amount="64" bind="true">Arrow</item>
+			<!-- ポーション効果 -->
+			<potion duration="oo" amplifier="9">Speed</potion>
+			<potion duration="oo" amplifier="0">Night Vision</potion>
+		</kit>
+		<!-- 青装備 -->
+		<kit name="blue" parents="default">
+			<chestplate color="5555ff" damage="-3000" bind="true">Leather Chestplate</chestplate>
+			<boots color="5555ff" damage="-3000" bind="true">Leather Boots</boots>
+			<item slot="7" amount="32" damage="11">Stained Glass</item>
+		</kit>
+		<!-- 白装備 -->
+		<kit name="green" parents="default">
+			<chestplate color="55ff55" damage="-3000" bind="true">Leather Chestplate</chestplate>
+			<boots color="55ff55" damage="-3000" bind="true">Leather Boots</boots>
+			<item slot="7" amount="32" damage="13">Stained Glass</item>
+		</kit>
+		<kit name="speed">
+			<potion duration="1" amplifier="0">Speed</potion>
+			<potion duration="3" amplifier="4">Damage Resistance</potion>
+		</kit>
+	</kits>
+
+	<!-- スポーン位置 -->
+	<spawns>
+		<spawn team="blue" yaw="-45" kit="blue">
+			<cuboid min="-19,50,-42" max="18,50,-30" />
+			<cuboid min="-42,50,-19" max="-30,50,18" />
+		</spawn>
+		<spawn team="green" yaw="135" kit="green">
+			<cuboid min="-19,50,29" max="18,50,41" />
+			<cuboid min="42,50,-19" max="28,50,18" />
+		</spawn>
+		<default yaw="180">
+			<cuboid min="-2,88,-2" max="1,88,1" />
+		</default>
+	</spawns>
+
+	<!-- フィルター定義 -->
+	<filters>
+		<filter name="bridges-allow" parents="allow-all"/><!-- 橋架け範囲の被っているところの編集を許可 -->
+		<filter name="only-blue" parents="deny-players">
+			<allow>
+				<team>blue</team>
+			</allow>
+		</filter>
+		<filter name="only-green" parents="deny-players">
+			<allow>
+				<team>green</team>
+			</allow>
+		</filter>
+		<filter name="outside">
+			<not>
+				<void/>
+			</not>
+		</filter>
+		<!-- 羊毛/カーペットの破壊を拒否 -->
+		<filter name="wools" parents="allow-blocks">
+			<deny>
+				<block>Wool</block>
+			</deny>
+		</filter>
+		<!-- TNTによる自拠点側への破壊からの保護 -->
+		<filter name="tnt-guard-blue">
+			<all>
+				<not>
+					<all>
+						<team>blue</team>
+						<cause>explosion</cause>
+						<not>
+							<block>tnt</block>
+						</not>
+					</all>
+				</not>
+				<not>
+					<all>
+						<team>blue</team>
+						<cause>player</cause>
+						<all>
+							<block>Stained Clay</block>
+						</all>
+					</all>
+				</not>
+				<not>
+					<all>
+						<cause>player</cause>
+						<all>
+							<block>Wool</block>
+						</all>
+					</all>
+				</not>
+				<not>
+					<all>
+						<cause>explosion</cause>
+						<all>
+							<block>Wool</block>
+						</all>
+					</all>
+				</not>
+			</all>
+		</filter>
+		<filter name="tnt-guard-green">
+			<all>
+				<not>
+					<all>
+						<team>green</team>
+						<cause>explosion</cause>
+						<not>
+							<block>tnt</block>
+						</not>
+					</all>
+				</not>
+				<not>
+					<all>
+						<team>green</team>
+						<cause>player</cause>
+						<all>
+							<block>Stained Clay</block>
+						</all>
+					</all>
+				</not>
+				<not>
+					<all>
+						<cause>player</cause>
+						<all>
+							<block>Wool</block>
+						</all>
+					</all>
+				</not>
+				<not>
+					<all>
+						<cause>explosion</cause>
+						<all>
+							<block>Wool</block>
+						</all>
+					</all>
+				</not>
+			</all>
+		</filter>
+	</filters>
+
+	<!-- 領域定義 -->
+	<regions>
+		<!-- ポーション -->
+		<apply kit="speed">
+			<cuboid min="-52,46,-52" max="-42,46,-42"/>
+			<cuboid min="42,46,42" max="52,46,52"/>
+		</apply>
+		<!-- 本棚外枠の保護 -->
+		<union name="bookshelf">
+			<cuboid min="21,0,-48" max="23,48,-25"/>
+			<cuboid min="-24,0,-48" max="-22,48,-25"/>
+			<cuboid min="-48,0,-24" max="-46,48,23"/>
+			<cuboid min="-24,0,-48" max="23,48,-46"/>
+
+			<cuboid min="21,0,24" max="23,48,47"/>
+			<cuboid min="21,0,24" max="23,48,47"/>
+			<cuboid min="45,0,-24" max="47,48,23"/>
+			<cuboid min="-24,0,45" max="23,48,47"/>
+
+			<cuboid min="-48,0,21" max="-23,48,23"/>
+			<cuboid min="24,0,21" max="47,48,23"/>
+			<cuboid min="-48,0,-24" max="-23,48,-22"/>
+			<cuboid min="24,0,-24" max="47,48,-22"/>
+		</union>
+		<apply block="deny-all" message="`4You may not modify this area./この範囲は編集できまん。">
+			<region name="bookshelf"/>
+		</apply>
+		<!-- voidフィルターによる編集不可領域を広げないために最下層を保護 -->
+		<apply block="deny-all" message="`4最下層は編集できません。/You may not modify undermost layer.">
+			<cuboid min="-255,0,-255" max="255,0,255"/>
+		</apply>
+		<!-- チーム拠点定義と保護 -->
+		<cuboid name="blue-base" min="-72,0,-72" max="-25,255,-25"/>
+		<cuboid name="green-base" min="24,0,24" max="71,255,71"/>
+		<union name="Base">
+			<region name="blue-base"/>
+			<region name="green-base"/>
+		</union>
+		<apply block="deny-all" message="`4You may not modify base./拠点は編集できません。">
+			<region name="Base"/>
+		</apply>
+		<apply enter="only-blue" message="敵拠点に入る事は出来ません。 / You may not enter enemy bases.">
+			<region name="blue-base"/>
+		</apply>
+		<apply enter="only-green" message="敵拠点に入る事は出来ません。 / You may not enter enemy bases.">
+			<region name="green-base"/>
+		</apply>
+
+		<apply block="tnt-guard-blue">
+			<cuboid name="blue-base-l" min="-48,0,-24" max="-25,48,23"/>
+			<cuboid name="blue-base-r" min="-24,0,-48" max="23,48,-25"/>
+		</apply>
+		<apply block="tnt-guard-green">
+			<cuboid name="green-base-l" min="24,0,-24" max="47,48,23"/>
+			<cuboid name="green-base-r" min="-24,0,24" max="23,48,47"/>
+		</apply>
+
+		<!-- 橋掛けの制限 -->
+		<union name="blue-and-green-bridges">
+			<cuboid min="-13,1,-13" max="-10,20,-10"/>
+			<cuboid min="-13,1,9" max="-10,20,12"/>
+			<cuboid min="9,1,-13" max="12,20,-10"/>
+			<cuboid min="9,1,9" max="12,20,12"/>
+		</union>
+		<apply block-place="bridges-allow" block-break="bridges-allow">
+			<region name="blue-and-green-bridges"/>
+		</apply>
+		<union name="blue-bridges">
+			<cuboid name="blue-bridge-l" min="-24,1,9" max="23,20,12"/>
+			<cuboid name="blue-bridge-r" min="9,1,-24" max="12,20,23"/>
+		</union>
+		<union name="green-bridges">
+			<cuboid name="green-bridge-l" min="-24,1,-13" max="23,20,-10"/>
+			<cuboid name="green-bridge-r" min="-13,1,-24" max="-10,20,23"/>
+		</union>
+		<apply block-place="only-blue" block-break="tnt-guard-blue" message="`4You may not place blocks on bridges of enemy side./敵側の橋にブロックは設置できません。">
+			<region name="blue-bridges"/>
+		</apply>
+		<apply block-place="only-green" block-break="tnt-guard-green" message="`4You may not place blocks on bridges of enemy side./敵側の橋にブロックは設置できません。">
+			<region name="green-bridges"/>
+		</apply>
+
+		
+		<apply block="deny-all" block-break="deny-break" message="`4You may not modify this area./この範囲は編集できません。">
+			<cuboid min="-24,0,-24" max="23,255,23"/>
+		</apply>
+		
+		<apply enter="deny-all" block="deny-all" message="`4You may not enter this area!/この範囲は進入不可です!">
+			<rectangle min="-48,24" max="-25,47"/>
+			<rectangle min="24,-48" max="47,-25"/>
+		</apply>
+		<!-- 領域外 -->
+		<apply block="outside" message="`4You may not modify void area./範囲外は編集できません。">
+			<negative>
+				<rectangle min="-48,-48" max="47,47"/>
+			</negative>
+		</apply>
+		<union name="Sky">
+			<cuboid min="-255,54,-255" max="-24,10000,255"/>
+			<cuboid min="-255,54,-255" max="255,10000,-24"/>
+			<cuboid min="24,54,-255" max="255,10000,255"/>
+			<cuboid min="-255,54,24" max="255,10000,255"/>
+		</union>
+		<apply enter="deny-all" message="`4Invitation to sky was limited./上空への侵入は制限されています。">
+			<region name="Sky"/>
+		</apply>
+	</regions>
+
+	<itemremove>
+		<item>Diamond Pickaxe</item>
+		<item>Diamond Axe</item>
+		<item>Bow</item>
+		<item>Arrow</item>
+		<item>Cooked Beef</item>
+		<item>Vine</item>
+		<item>Leather Chestplate</item>
+		<item>Gold Leggings</item>
+		<item>Diamond Sword</item>
+		<item>Log</item>
+		<item>Stained Glass</item>
+		<item>Redstone</item>
+		
+		<item>Redstone Torch on</item>
+		<item>Redstone Torch off</item>
+		<item>Redstone Block</item>
+		<item>Diode</item>
+		<item>Lever</item>
+		<item>Wood</item>
+		<item>Wood Step</item>
+		<item>Fence</item>
+		<item>Trap Door</item>
+		<item>Stone Button</item>
+		<item>Stone Plate</item>
+		<item>Ladder</item>
+		<item>Bucket</item>
+		<item>Water Bucket</item>
+		<item>Fence</item>
+	</itemremove>
+
+	<!-- モニュメント定義 -->
+	<destroyables show-progress="false" materials="Stained Clay" completion="25%">
+	<!-- 理想の定義
+		<destroyable owner="blue" name="Books L">
+			<cuboid min="-48,0,-24" max="-25,48,23"/>
+		</destroyable>
+		<destroyable owner="blue" name="Books R">
+			<cuboid min="-24,0,-48" max="23,48,-25"/>
+		</destroyable>
+
+		<destroyable owner="green" name="Books L">
+			<cuboid min="24,0,-24" max="47,48,23"/>
+		</destroyable>
+		<destroyable owner="green" name="Books R">
+			<cuboid min="-24,0,24" max="23,48,47"/>
+		</destroyable>
+	ここまで -->
+	
+	<!-- ラグ軽減用 -->
+		<destroyable owner="blue" name="Books L">
+			<cuboid min="-38,0,-24" max="-38,48,23"/>
+		</destroyable>
+		<destroyable owner="blue" name="Books R">
+			<cuboid min="-24,0,-38" max="23,48,-38"/>
+		</destroyable>
+
+		<destroyable owner="green" name="Books L">
+			<cuboid min="37,0,-24" max="37,48,23"/>
+		</destroyable>
+		<destroyable owner="green" name="Books R">
+			<cuboid min="-24,0,37" max="23,48,37"/>
+		</destroyable>
+	
+	
+	</destroyables>
+
+	<!-- キル報酬 -->
+	<killreward>
+		<item amount="1">Golden Apple</item>
+		<item ammount="16">Arrow</item>
+	</killreward>
+
+	<!-- ブロックドロップ -->
+	<blockdrops>
+		<!-- ブロックドロップ拒否 -->
+		<rule>
+			<region>
+				<rectangle min="-oo,-oo" max="oo,oo"/>
+			</region>
+			<filter>
+				<block>Wood</block>
+				<block>Log</block>
+				<block>Stained Clay</block>
+				<block>Redstone Block</block>
+				<block>Ladder</block>
+				<block>Lever</block>
+				<block>Redstone Torch On</block>
+				<block>Redstone Torch Off</block>
+				<block>Fence</block>
+				<block>Wood Step</block>
+				<block>Trap Door</block>
+				<block>Stone Button</block>
+				<block>Chest</block>
+			</filter>
+		</rule>
+	</blockdrops>
+
+	<!-- 限界高度 -->
+	<maxbuildheight>45</maxbuildheight>
+
+	<broadcasts>
+		<tip after="10s" every="3m">このマップの目標は敵陣地側の本(堅焼き粘土)の破壊です。</tip>
+		<alert after="15s" every="3m">橋を架けられる範囲はチームごとに制限されており、羊毛/カーペットで示された範囲のみ橋をかけられます。</alert>
+		<tip after="45s" every="3m">このマップではTNTキャノンに水を必要としません。</tip>
+	</broadcasts>
+
+	<!-- ゲームモードの設定(TNTダメージの強化のため) -->
+	<script>
+		<![CDATA[
+			match.on('start', function() {
+				match.getWorld().setDifficulty("HARD");
+			});
+		]]>
+	</script>
+
+	<!-- チュートリアル -->
+	<include src="tutorial.xml"/>
+	<tutorial>
+		<stage title="Destroy the Core and Destroy the Monument(DTC and DTM)">
+			<message>
+				<line>This map is a `a`lDestroy the Core and Destroy the Monument `r(DTM and DTC) map.</line>
+				<line>The objective is to destroy the other team's monument and core on their front.</line>
+			</message>
+			<message lang="ja_JP">
+				<line>このマップは`a`lDestroy the Core and Destroy the Monument `r(DTM and DTC)マップです。</line>
+				<line>敵チームのモニュメントとコアを破壊する事が目標になります。</line>
+			</message>
+			<teleport>
+				<point yaw="180" piitch="30">0,93,0</point>
+			</teleport>
+		</stage>
+
+		<!-- スポーン場所の説明 -->
+		<stage title="Blue-Base">
+			<message>
+				 <line>This is blue team spawn point.</line>
+			</message>
+			<message lang="ja_JP">
+				<line>青チームのスポーン場所はこちらです。</line>
+			</message>
+   			<teleport>
+   				<point yaw="-45" pitch="45">-42,66,-42</point>
+			</teleport>
+		</stage>
+		<stage title="green-Base">
+			<message>
+				 <line>This is green team spawn point.</line>
+			</message>
+			<message lang="ja_JP">
+				<line>緑チームのスポーン場所はこちらです。</line>
+			</message>
+   			<teleport>
+   				<point yaw="135" pitch="45">42,66,42</point>
+			</teleport>
+		</stage>
+
+
+		<!-- オブジェクトの説明 -->	
+		<stage title="objective-X">
+			<message>
+				 <line>This is a objective "Books L".</line>
+			</message>
+			<message lang="ja_JP">
+				<line>これがモニュメント"Books L"です。</line>
+			</message>
+   			<teleport>
+   				<point yaw="90" pitch="0">-1,24,0</point>
+			</teleport>
+		</stage>
+		<stage title="objective-Y">
+			<message>
+				 <line>This is a objective "Books R".</line>
+			</message>
+			<message lang="ja_JP">
+				<line>これがモニュメント"Books R"です。</line>
+			</message>
+   			<teleport>
+   				<point yaw="180" pitch="0">-1,24,0</point>
+			</teleport>
+		</stage>
+
+		<!-- 橋をかけられる場所の説明 -->
+		<stage title="Bridge">
+			<message>
+				 <line>To place blocks between bases are restricted.</line>
+				 <line>Cobweb and colored stained clay are landmarks.</line>
+			</message>
+			<message lang="ja_JP">
+				<line>橋をかけられる場所は制限されています。</line>
+				<line>蜘蛛の巣と色付き堅焼き粘土が目印です。</line>
+			</message>
+   			<teleport>
+   				<point yaw="45" pitch="30">-19,3,6</point>
+			</teleport>
+		</stage>
+	</tutorial>
+</map>
