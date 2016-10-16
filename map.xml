@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <map proto="1.3.3">
 	<name>Xelf</name>
-	<version>0.1.0</version>
+	<version>0.2.0</version>
 	<objective>敵拠点の本の破壊。 / Destroy the enemy's books.</objective>
 
 	<authors>
@@ -20,14 +20,15 @@
 			<!-- 装備 -->
 			<leggings bind="true">Gold Leggings</leggings>
 			<!-- ホットバー -->
-			<item slot="0" enchantment="DAMAGE ALL:2;DIG_SPEED:2">Diamond Axe</item>
+			<item slot="0" enchantment="DAMAGE ALL:2;DIG_SPEED:2" damage="-3000">Diamond Axe</item>
 			<item slot="1">Bow</item>
-			<item slot="2" enchantment="DAMAGE ALL:2">Diamond Pickaxe</item>
+			<item slot="2" enchantment="DIG_SPEED:5" damage="-3000">Shears</item>
 			<item slot="5" amount="64">Cooked Beef</item>
 			<item slot="6" amount="24">Vine</item>
 			<item slot="8" amount="32" damage="2">Log</item>
 			<!-- インベントリ -->
 			<item slot="9" amount="64" bind="true">Arrow</item>
+			<item slot="29" enchantment="DAMAGE ALL:2;DIG_SPEED:5" damage="-3000">Diamond Pickaxe</item>
 			<!-- ポーション効果 -->
 			<potion duration="oo" amplifier="9">Speed</potion>
 			<potion duration="oo" amplifier="0">Night Vision</potion>
@@ -106,7 +107,7 @@
 						<team>blue</team>
 						<cause>player</cause>
 						<all>
-							<block>Stained Clay</block>
+							<block>Wool</block>
 						</all>
 					</all>
 				</not>
@@ -114,7 +115,7 @@
 					<all>
 						<cause>player</cause>
 						<all>
-							<block>Wool</block>
+							<block>Stained Clay</block>
 						</all>
 					</all>
 				</not>
@@ -122,7 +123,7 @@
 					<all>
 						<cause>explosion</cause>
 						<all>
-							<block>Wool</block>
+							<block>Stained Clay</block>
 						</all>
 					</all>
 				</not>
@@ -144,7 +145,7 @@
 						<team>green</team>
 						<cause>player</cause>
 						<all>
-							<block>Stained Clay</block>
+							<block>Wool</block>
 						</all>
 					</all>
 				</not>
@@ -152,7 +153,7 @@
 					<all>
 						<cause>player</cause>
 						<all>
-							<block>Wool</block>
+							<block>Stained Clay</block>
 						</all>
 					</all>
 				</not>
@@ -160,7 +161,7 @@
 					<all>
 						<cause>explosion</cause>
 						<all>
-							<block>Wool</block>
+							<block>Stained Clay</block>
 						</all>
 					</all>
 				</not>
@@ -308,7 +309,7 @@
 	</itemremove>
 
 	<!-- モニュメント定義 -->
-	<destroyables show-progress="false" materials="Stained Clay" completion="25%">
+	<destroyables show-progress="false" materials="Wool" completion="40%">
 	<!-- 理想の定義
 		<destroyable owner="blue" name="Books L">
 			<cuboid min="-48,0,-24" max="-25,48,23"/>
@@ -359,7 +360,7 @@
 			<filter>
 				<block>Wood</block>
 				<block>Log</block>
-				<block>Stained Clay</block>
+				<block>Wool</block>
 				<block>Redstone Block</block>
 				<block>Ladder</block>
 				<block>Lever</block>
@@ -378,9 +379,9 @@
 	<maxbuildheight>45</maxbuildheight>
 
 	<broadcasts>
-		<tip after="10s" every="3m">このマップの目標は敵陣地側の本(堅焼き粘土)の破壊です。</tip>
-		<alert after="15s" every="3m">橋を架けられる範囲はチームごとに制限されており、羊毛/カーペットで示された範囲のみ橋をかけられます。</alert>
-		<tip after="45s" every="3m">このマップではTNTキャノンに水を必要としません。</tip>
+		<tip after="10s" every="3m">このマップの目標は敵陣地側の`4本(羊毛)の破壊`rです。</tip>
+		<alert after="15s" every="3m">橋を架けられる範囲は`4チームごとに制限されて`rおり、堅焼き粘土/カーペットで示された範囲のみ橋をかけられます。</alert>
+		<tip after="45s" every="3m">このマップでは`4自陣へ`rのTNTによる爆破保護が適用されています。</tip>
 	</broadcasts>
 
 	<!-- ゲームモードの設定(TNTダメージの強化のため) -->
@@ -395,14 +396,14 @@
 	<!-- チュートリアル -->
 	<include src="tutorial.xml"/>
 	<tutorial>
-		<stage title="Destroy the Core and Destroy the Monument(DTC and DTM)">
+		<stage title="Destroy the Core and Destroy the Monument(DTM)">
 			<message>
-				<line>This map is a `a`lDestroy the Core and Destroy the Monument `r(DTM and DTC) map.</line>
-				<line>The objective is to destroy the other team's monument and core on their front.</line>
+				<line>This map is a `a`lDestroy the Monument `r(DTM) map.</line>
+				<line>The objective is to destroy the other team's monument.</line>
 			</message>
 			<message lang="ja_JP">
-				<line>このマップは`a`lDestroy the Core and Destroy the Monument `r(DTM and DTC)マップです。</line>
-				<line>敵チームのモニュメントとコアを破壊する事が目標になります。</line>
+				<line>このマップは`a`lDestroy the Monument `r(DTM)マップです。</line>
+				<line>敵チームのモニュメントを破壊する事が目標になります。</line>
 			</message>
 			<teleport>
 				<point yaw="180" piitch="30">0,93,0</point>
