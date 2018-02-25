@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <map proto="1.3.3">
 	<name>Xelf</name>
-	<version>0.2.0</version>
+	<version>1.0.1</version>
 	<objective>敵拠点の本の破壊。 / Destroy the enemy's books.</objective>
 
 	<authors>
@@ -184,7 +184,7 @@
 			<cuboid min="-24,0,-48" max="23,48,-46"/>
 
 			<cuboid min="21,0,24" max="23,48,47"/>
-			<cuboid min="21,0,24" max="23,48,47"/>
+			<cuboid min="-24,0,24" max="-22,48,47"/>
 			<cuboid min="45,0,-24" max="47,48,23"/>
 			<cuboid min="-24,0,45" max="23,48,47"/>
 
